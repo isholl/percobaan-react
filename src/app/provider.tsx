@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@/components/theme-provider';
 import { queryConfig } from '@/lib/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, Suspense, useState } from 'react';
@@ -20,7 +21,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     >
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <ThemeProvider defaultTheme="system" storageKey="theme">
+            {children}
+          </ThemeProvider>
         </QueryClientProvider>
       </HelmetProvider>
     </Suspense>
