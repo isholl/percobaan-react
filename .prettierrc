@@ -1,10 +1,5 @@
 {
-  "trailingComma": "all",
-  "tabWidth": 2,
   "singleQuote": true,
-  "printWidth": 80,
-  "endOfLine": "lf",
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindAttributes": ["class", "className", "theme"],
-  "tailwindFunctions": ["twMerge", "createTheme", "clsx"]
+  "endOfLine": "auto",
+  "plugins": ["prettier-plugin-tailwindcss"]
 }

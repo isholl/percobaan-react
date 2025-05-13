@@ -4,35 +4,38 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import tailwindcss from 'eslint-plugin-tailwindcss';
-import prettier from 'eslint-config-prettier';
+import prettier from 'eslint-plugin-prettier';
+import path from 'path';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  js.configs.recommended,
+  tseslint.configs.recommended,
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      prettier,
-    ],
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
     },
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      tailwindcss: tailwindcss,
+      tailwindcss,
+      prettier,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      ...reactRefresh.configs.recommended.rules,
       ...tailwindcss.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': ['off'],
+      'react-refresh/only-export-components': ['off'],
+      'prettier/prettier': ['error'],
     },
     settings: {
       tailwindcss: {
-        callees: ['twMerge', 'createTheme', 'clsx'],
-        classRegex: '^(class(Name)|theme)?$',
+        config: path.join(__dirname, './tailwind.config.ts'),
       },
     },
   },
