@@ -2,12 +2,12 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
-import {
-  default as AppRoot,
-  ErrorBoundary as AppErrorBundary,
-} from './routes/app/root';
 import { paths } from '@/config/paths';
 import { ProtectedRoute } from '@/lib/auth';
+import {
+  ErrorBoundary as AppErrorBundary,
+  default as AppRoot,
+} from './routes/app/root';
 
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;

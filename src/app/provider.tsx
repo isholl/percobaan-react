@@ -1,8 +1,9 @@
-import { ThemeProvider } from '@/components/theme-provider';
-import { queryConfig } from '@/lib/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, Suspense, useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
+
+import { ThemeProvider } from '@/components/theme-provider';
+import { queryConfig } from '@/lib/react-query';
 
 type AppProviderProps = { children: ReactNode };
 

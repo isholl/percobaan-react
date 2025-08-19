@@ -1,6 +1,7 @@
+import { useNavigate } from 'react-router';
+
 import { Button } from '@/components/ui/button';
 import { paths } from '@/config/paths';
-import { useNavigate } from 'react-router';
 
 const DashboardRoute = () => {
   const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
@@ -10,6 +11,7 @@ const DashboardRoute = () => {
     sessionStorage.removeItem('userData');
     return navigate(paths.auth.login.getHref());
   };
+
   return (
     <>
       <h1>Welcome {user.username}</h1>

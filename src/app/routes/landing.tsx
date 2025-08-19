@@ -1,10 +1,10 @@
 import { GithubIcon, HomeIcon } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
+import { AppLayout } from '@/components/layouts/app-layout';
 import { Head } from '@/components/seo';
 import { Button } from '@/components/ui/button';
 import { paths } from '@/config/paths';
-import { AppLayout } from '@/components/layouts/app-layout';
 
 const LandingRoute = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const LandingRoute = () => {
               </Button>
               <Button asChild variant="outline" className="w-full sm:w-auto">
                 <a
-                  href="https://www.github.com/esedensies/belajar-bang"
+                  href="https://www.github.com/isholl/percobaan-react"
                   target="_blank"
                 >
                   Github Repo

@@ -2,6 +2,7 @@ import { Book, Menu, Sunset, Trees, Zap } from 'lucide-react';
 import { ReactNode } from 'react';
 import { Link } from 'react-router';
 
+import { paths } from '@/config/paths';
 import {
   Accordion,
   AccordionContent,
@@ -9,6 +10,7 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import { Button } from '../ui/button';
+import { ModeToggle } from '../ui/mode-toggle';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -24,8 +26,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '../ui/sheet';
-import { ModeToggle } from '../ui/mode-toggle';
-import { paths } from '@/config/paths';
 
 interface MenuItem {
   title: string;

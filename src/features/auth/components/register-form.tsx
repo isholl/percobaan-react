@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router';
-import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
