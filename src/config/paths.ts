@@ -5,8 +5,16 @@ export const paths = {
   },
 
   auth: {
-    register: { path: '/register', getHref: () => '/register' },
-    login: { path: '/login', getHref: () => '/login' },
+    register: {
+      path: '/auth/register',
+      getHref: (redirectTo?: string | null | undefined) =>
+        `/auth/register${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`,
+    },
+    login: {
+      path: '/auth/login',
+      getHref: (redirectTo?: string | null | undefined) =>
+        `/auth/login${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`,
+    },
   },
 
   app: {
@@ -17,6 +25,10 @@ export const paths = {
     dashboard: {
       path: '',
       getHref: () => '/app',
+    },
+    users: {
+      path: '/app/users',
+      getHref: () => '/app/users',
     },
   },
 } as const;

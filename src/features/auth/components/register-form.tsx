@@ -1,91 +1,64 @@
-import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router';
 
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  handleRegisterSubmit,
-  registerInput,
-  useRegisterForm,
-} from '@/lib/auth';
+import { registerInputSchema, useRegister } from '@/lib/auth';
 
-export const RegisterForm = () => {
-  const navigate = useNavigate();
-  const form = useRegisterForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+type RegisterFormProps = {
+  onSuccess: () => void;
+};
 
-  const onSubmit = async (value: registerInput) => {
-    setIsSubmitting(true);
-    try {
-      await handleRegisterSubmit(value, navigate);
-    } catch (error) {
-      console.error('Registration failed', error);
-    } finally {
-      console.log('Registration successful');
-
-      setIsSubmitting(false);
-    }
-  };
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const registering = useRegister({ onSuccess });
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input {...field} autoFocus />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email address</FormLabel>
-              <FormControl>
-                <Input {...field} type="email" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input {...field} type="password" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Creating account...' : 'Create an account'}
-        </Button>
-        <Button type="button" variant="outline" className="w-full">
-          <FcGoogle />
-          Sign up with Google
-        </Button>
-      </form>
+    <Form
+      onSubmit={(values) => registering.mutate(values)}
+      schema={registerInputSchema}
+      options={{ shouldUnregister: true }}
+    >
+      {({ register, formState }) => (
+        <>
+          <Input
+            type="text"
+            label="First name"
+            autoFocus
+            error={formState.errors.firstname}
+            registration={register('firstname')}
+          />
+          <Input
+            type="text"
+            label="Last name"
+            error={formState.errors.lastname}
+            registration={register('lastname')}
+          />
+          <Input
+            type="email"
+            label="Email Address"
+            error={formState.errors.email}
+            registration={register('email')}
+          />
+          <Input
+            type="password"
+            label="Password"
+            error={formState.errors.password}
+            registration={register('password')}
+          />
+          <Button
+            type="submit"
+            isLoading={registering.isPending}
+            className="w-full"
+            disabled={registering.isPending}
+          >
+            Create an account
+          </Button>
+          <Button type="button" variant="outline" className="w-full">
+            <FcGoogle />
+            Sign up with Google
+          </Button>
+        </>
+      )}
     </Form>
   );
 };

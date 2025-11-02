@@ -1,84 +1,73 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ReactNode } from 'react';
-import { useForm } from 'react-hook-form';
-import { Navigate, useNavigate } from 'react-router';
+import { configureAuth } from 'react-query-auth';
+import { Navigate, useLocation } from 'react-router';
 import { z } from 'zod';
 
 import { paths } from '@/config/paths';
+import { AuthResponse, User } from '@/types/api';
 
-const loginInputSchema = z.object({
+import { api } from './api-client';
+
+const getUser = async (): Promise<User> => {
+  const response = await api.get('/auth/me');
+
+  return response.data;
+};
+
+const logout = (): Promise<void> => {
+  return api.post('/auth/logout');
+};
+
+export const loginInputSchema = z.object({
   email: z.string().min(4).email(),
   password: z.string().min(8),
 });
 
-export type loginInput = z.infer<typeof loginInputSchema>;
+export type LoginInput = z.infer<typeof loginInputSchema>;
 
-export const useLoginForm = () => {
-  return useForm<loginInput>({
-    resolver: zodResolver(loginInputSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
+const loginWithEmailAndPassword = (data: LoginInput): Promise<AuthResponse> => {
+  return api.post('/auth/login', data);
 };
 
-export const handleLoginSubmit = (
-  values: loginInput,
-  navigate: ReturnType<typeof useNavigate>,
-  setShowAlert: (value: boolean) => void,
-) => {
-  const user = JSON.parse(localStorage.getItem('userData') || '{}');
-  if (values.email === user.email && values.password === user.password) {
-    sessionStorage.setItem('userData', JSON.stringify(user));
-    navigate(paths.app.dashboard.getHref());
-  } else {
-    setShowAlert(true);
-  }
-};
-
-const registerInputSchema = z.object({
-  username: z.string().min(4),
+export const registerInputSchema = z.object({
+  firstname: z.string().min(4),
+  lastname: z.string().min(4),
   email: z.string().min(4).email(),
   password: z.string().min(8),
+  role: z.enum(['ADMIN', 'USER']).default('USER'),
 });
 
-export type registerInput = z.infer<typeof registerInputSchema>;
+export type RegisterInput = z.infer<typeof registerInputSchema>;
 
-export const useRegisterForm = () => {
-  return useForm<registerInput>({
-    resolver: zodResolver(registerInputSchema),
-    defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-    },
-  });
+const registerWithEmailAndPassword = (
+  data: RegisterInput,
+): Promise<AuthResponse> => {
+  return api.post('/auth/register', data);
 };
 
-export const handleRegisterSubmit = (
-  values: registerInput,
-  navigate: ReturnType<typeof useNavigate>,
-): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      try {
-        localStorage.setItem('userData', JSON.stringify(values));
-        navigate(paths.auth.login.getHref());
-        resolve();
-      } catch (error) {
-        console.error('Registration failed', error);
-        reject(error);
-      }
-    }, 2000);
-  });
+const authConfig = {
+  userFn: getUser,
+  loginFn: async (data: LoginInput) => {
+    const response = await loginWithEmailAndPassword(data);
+    return response.user;
+  },
+  registerFn: async (data: RegisterInput) => {
+    const response = await registerWithEmailAndPassword(data);
+    return response.user;
+  },
+  logoutFn: logout,
 };
 
-export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
+export const { useUser, useLogin, useLogout, useRegister, AuthLoader } =
+  configureAuth(authConfig);
 
-  if (!user.username) {
-    return <Navigate to={paths.auth.login.getHref()} replace />;
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = useUser();
+  const location = useLocation();
+
+  if (!user.data) {
+    return (
+      <Navigate to={paths.auth.login.getHref(location.pathname)} replace />
+    );
   }
 
   return children;

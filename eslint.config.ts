@@ -11,7 +11,6 @@ export default tseslint.config(
   tseslint.configs.recommended,
   {
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/components/ui/**'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {

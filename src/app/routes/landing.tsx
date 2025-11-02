@@ -1,16 +1,19 @@
-import { GithubIcon, HomeIcon } from 'lucide-react';
+import { HomeIcon } from 'lucide-react';
+import { SiGithub } from 'react-icons/si';
 import { useNavigate } from 'react-router';
 
+import { Head } from '@/components/head';
 import { AppLayout } from '@/components/layouts/app-layout';
-import { Head } from '@/components/seo';
 import { Button } from '@/components/ui/button';
 import { paths } from '@/config/paths';
+import { useUser } from '@/lib/auth';
 
 const LandingRoute = () => {
+  const user = useUser();
   const navigate = useNavigate();
+
   const handleStart = () => {
-    const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
-    const route = user.username
+    const route = user.data
       ? paths.app.dashboard.getHref()
       : paths.auth.login.getHref();
 
@@ -41,7 +44,7 @@ const LandingRoute = () => {
                   target="_blank"
                 >
                   Github Repo
-                  <GithubIcon />
+                  <SiGithub />
                 </a>
               </Button>
             </div>
