@@ -24,14 +24,14 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             type="text"
             label="First name"
             autoFocus
-            error={formState.errors.firstname}
-            registration={register('firstname')}
+            error={formState.errors.firstName}
+            registration={register('firstName')}
           />
           <Input
             type="text"
             label="Last name"
-            error={formState.errors.lastname}
-            registration={register('lastname')}
+            error={formState.errors.lastName}
+            registration={register('lastName')}
           />
           <Input
             type="email"
