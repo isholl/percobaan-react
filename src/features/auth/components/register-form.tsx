@@ -3,7 +3,11 @@ import { FcGoogle } from 'react-icons/fc';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { registerInputSchema, useRegister } from '@/lib/auth';
+import {
+  registerInputSchema,
+  useLoginWithGoogle,
+  useRegister,
+} from '@/lib/auth';
 
 type RegisterFormProps = {
   onSuccess: () => void;
@@ -11,6 +15,8 @@ type RegisterFormProps = {
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const registering = useRegister({ onSuccess });
+
+  const loginWithGoogle = useLoginWithGoogle({ onSuccess });
 
   return (
     <Form
@@ -53,7 +59,12 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           >
             Create an account
           </Button>
-          <Button type="button" variant="outline" className="w-full">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => loginWithGoogle()}
+            className="w-full"
+          >
             <FcGoogle />
             Sign up with Google
           </Button>

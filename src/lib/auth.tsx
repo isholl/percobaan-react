@@ -1,8 +1,13 @@
+import {
+  useGoogleLogin,
+  UseGoogleLoginOptionsImplicitFlow,
+} from '@react-oauth/google';
 import { configureAuth } from 'react-query-auth';
 import { Navigate, useLocation } from 'react-router';
 import { z } from 'zod';
 
 import { paths } from '@/config/paths';
+import { toast } from '@/hooks/use-toast';
 import { AuthResponse, User } from '@/types/api';
 
 import { api } from './api-client';
@@ -26,6 +31,10 @@ export type LoginInput = z.infer<typeof loginInputSchema>;
 
 const loginWithEmailAndPassword = (data: LoginInput): Promise<AuthResponse> => {
   return api.post('/auth/login', data);
+};
+
+const loginWithGoogle = (data: { token: string }): Promise<AuthResponse> => {
+  return api.post('/auth/login/google', data);
 };
 
 export const registerInputSchema = z.object({
@@ -59,6 +68,34 @@ const authConfig = {
 
 export const { useUser, useLogin, useLogout, useRegister, AuthLoader } =
   configureAuth(authConfig);
+
+export const useLoginWithGoogle = (
+  options: UseGoogleLoginOptionsImplicitFlow,
+) => {
+  const user = useUser();
+
+  return useGoogleLogin({
+    ...options,
+    onSuccess: async (response) => {
+      const token = response.access_token;
+
+      await loginWithGoogle({ token });
+
+      await user.refetch();
+
+      options?.onSuccess?.(response);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error Logging In',
+        description: error.error,
+        variant: 'destructive',
+      });
+
+      options?.onError?.(error);
+    },
+  });
+};
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useUser();
