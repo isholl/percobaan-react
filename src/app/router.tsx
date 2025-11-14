@@ -1,9 +1,15 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+  useLocation,
+} from 'react-router';
 
 import { paths } from '@/config/paths';
-import { ProtectedRoute } from '@/lib/auth';
+import { useUser } from '@/lib/auth';
+
 import {
   ErrorBoundary as AppErrorBundary,
   default as AppRoot,
@@ -61,4 +67,17 @@ export const AppRouter = () => {
   const router = useMemo(() => createAppRouter(queryClient), [queryClient]);
 
   return <RouterProvider router={router} />;
+};
+
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = useUser();
+  const location = useLocation();
+
+  if (!user.data) {
+    return (
+      <Navigate to={paths.auth.login.getHref(location.pathname)} replace />
+    );
+  }
+
+  return children;
 };

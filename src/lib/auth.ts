@@ -3,12 +3,10 @@ import {
   UseGoogleLoginOptionsImplicitFlow,
 } from '@react-oauth/google';
 import { configureAuth } from 'react-query-auth';
-import { Navigate, useLocation } from 'react-router';
 import { z } from 'zod';
 
-import { paths } from '@/config/paths';
 import { toast } from '@/hooks/use-toast';
-import { AuthResponse, User } from '@/types/api';
+import type { AuthResponse, User } from '@/types/api';
 
 import { api } from './api-client';
 
@@ -95,17 +93,4 @@ export const useLoginWithGoogle = (
       options?.onError?.(error);
     },
   });
-};
-
-export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const user = useUser();
-  const location = useLocation();
-
-  if (!user.data) {
-    return (
-      <Navigate to={paths.auth.login.getHref(location.pathname)} replace />
-    );
-  }
-
-  return children;
 };
