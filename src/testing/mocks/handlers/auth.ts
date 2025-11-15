@@ -205,37 +205,4 @@ export const authHandlers = [
       );
     }
   }),
-
-  http.get(`${env.API_URL}/auth/google/profile`, async ({ request }) => {
-    await networkDelay();
-
-    try {
-      const url = new URL(request.url);
-      const token = url.searchParams.get('token');
-
-      if (!token) {
-        return HttpResponse.json({ message: 'Missing token' }, { status: 400 });
-      }
-
-      const response = await axios.get(
-        'https://www.googleapis.com/oauth2/v1/userinfo',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-          },
-          params: {
-            access_token: token,
-          },
-        },
-      );
-
-      return HttpResponse.json({ data: response.data });
-    } catch (error) {
-      return HttpResponse.json(
-        { message: (error as Error)?.message || 'Server Error' },
-        { status: 500 },
-      );
-    }
-  }),
 ];
