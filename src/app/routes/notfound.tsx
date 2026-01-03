@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 
-import { Head } from '@/components/head';
+import { Head } from '@/components/seo';
 import { paths } from '@/config/paths';
 
 const NotFoundRoute = () => {
