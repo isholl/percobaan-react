@@ -2,7 +2,6 @@ import { Book, Sunset, Trees, Zap } from 'lucide-react';
 import { Link } from 'react-router';
 
 import { default as logoSvg } from '@/assets/react.svg';
-import { UserMenu } from '@/components/layouts/navbar/user-menu';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { paths } from '@/config/paths';
 import { useUser } from '@/lib/auth';
@@ -11,6 +10,7 @@ import { AuthButtons } from './auth-buttons';
 import { DesktopMenu } from './desktop-menu';
 import { MobileMenu } from './mobile-menu';
 import type { Logo, MenuItem } from './types';
+import { UserMenu } from './user-menu';
 
 type NavbarProps = {
   logo?: Logo;
